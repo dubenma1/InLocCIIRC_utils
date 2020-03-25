@@ -6,7 +6,7 @@ outputPath = strcat(tempname, '.mat');
 save(inputPath, 'meshPath', 'f', 'R', 't', 'sensorSize');
 
 % call projectPointCloud.py
-command = sprintf('PATH=/usr/local/bin:$PATH python3 %s %s %s', projectMeshPyPath, inputPath, outputPath);
+command = sprintf('PATH=/usr/local/bin:$PATH PYOPENGL_PLATFORM=osmesa python3 %s %s %s', projectMeshPyPath, inputPath, outputPath);
 disp(command)
 [status, cmdout] = system(command);
 disp(cmdout)
