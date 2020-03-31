@@ -1,6 +1,8 @@
 function R = rotationMatrix(xyz, order)
 % xyz: rotation vector around the specified axis in radians
 % right-handed coordinate system is assumed
+% 'XYZ' order means 'Z' rotation will be first, 'Y' rotation second and 'X' rotation third.
+% WARNING: this order seems to be the opposite from scipy.spatial.transform.Rotation.from_euler
 
 x = xyz(1);
 y = xyz(2);

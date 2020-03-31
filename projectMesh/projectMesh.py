@@ -6,11 +6,11 @@ import trimesh
 from PIL import Image
 import open3d as o3d
 
-def projectMesh(meshPath, f, R, t, sensorSize):
-    RGBcut, XYZcut, depth, XYZpts = projectMeshDebug(meshPath, f, R, t, sensorSize, False)
+def projectMesh(meshPath, f, R, t, sensorSize, ortho, mag):
+    RGBcut, XYZcut, depth, XYZpts = projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, False)
     return RGBcut, XYZcut, depth
 
-def projectMeshDebug(meshPath, f, R, t, sensorSize, debug):
+def projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, debug):
     trimeshScene = trimesh.load(meshPath)
     scene = pyrender.Scene.from_trimesh_scene(trimeshScene)
 
@@ -20,7 +20,10 @@ def projectMeshDebug(meshPath, f, R, t, sensorSize, debug):
     fovHorizontal = 2*np.arctan((sensorWidth/2)/f)
     fovVertical = 2*np.arctan((sensorHeight/2)/f)
 
-    camera = pyrender.PerspectiveCamera(fovVertical)
+    if ortho:
+        camera = pyrender.OrthographicCamera(xmag=mag, ymag=mag)
+    else:
+        camera = pyrender.PerspectiveCamera(fovVertical)
 
     camera_pose = np.eye(4)
     camera_pose[0:3,0:3] = R
@@ -89,8 +92,10 @@ if __name__ == '__main__':
     R = inputData['R']
     t = inputData['t']
     sensorSize = inputData['sensorSize']
+    ortho = inputData['ortho']
+    mag = inputData['mag']
 
-    RGBcut, XYZcut, depth, XYZpc = projectMeshDebug(meshPath, f, R, t, sensorSize, debug)
+    RGBcut, XYZcut, depth, XYZpc = projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, debug)
 
     if debug:
         o3d.visualization.draw_geometries([spacePc, XYZpc])

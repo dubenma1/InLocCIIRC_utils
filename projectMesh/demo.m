@@ -5,7 +5,7 @@ t = [0.0; 1.0; 0.0];
 sensorSize = [1600 1200];
 projectMeshPyPath = './projectMesh.py';
 
-[RGBcut, XYZcut, depth] = projectMesh(meshPath, f, R, t, sensorSize, projectMeshPyPath, false);
+[RGBcut, XYZcut, depth] = projectMesh(meshPath, f, R, t, sensorSize, false, -1, projectMeshPyPath);
 
 figure(1);
 imshow(RGBcut);
