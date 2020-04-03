@@ -10,10 +10,33 @@ def projectMesh(meshPath, f, R, t, sensorSize, ortho, mag):
     RGBcut, XYZcut, depth, XYZpts = projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, False)
     return RGBcut, XYZcut, depth
 
-def projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, debug):
-    trimeshScene = trimesh.load(meshPath)
-    scene = pyrender.Scene.from_trimesh_scene(trimeshScene)
+def projectMeshCached(scene, f, R, t, sensorSize, ortho, mag):
+    RGBcut, XYZcut, depth, XYZpts = projectMeshCachedDebug(scene, f, R, t, sensorSize, ortho, mag, False)
+    return RGBcut, XYZcut, depth
 
+def buildXYZcut(sensorWidth, sensorHeight, t, cameraDirection, scaling, sensorXAxis, sensorYAxis, depth):
+    # TODO: compute xs, ys only once (may not actually matter)
+    ts = np.broadcast_to(t, (sensorHeight*sensorWidth, 3))
+    camDirs = np.broadcast_to(cameraDirection, (sensorHeight*sensorWidth, 3))
+    xs = np.arange(-int(sensorWidth/2), int(sensorWidth/2))
+    xs = np.broadcast_to(xs, (sensorHeight, sensorWidth)).T
+    xs = np.reshape(xs, (sensorHeight*sensorWidth, 1))
+    xs = np.tile(xs, (1,3))
+    ys = np.arange(-int(sensorHeight/2), int(sensorHeight/2))
+    ys = np.broadcast_to(ys, (sensorWidth, sensorHeight))
+    ys = np.reshape(ys, (sensorHeight*sensorWidth, 1))
+    ys = np.tile(ys, (1,3))
+    sensorXAxes = np.broadcast_to(sensorXAxis, (sensorHeight*sensorWidth, 3))
+    sensorYAxes = np.broadcast_to(sensorYAxis, (sensorHeight*sensorWidth, 3))
+    sensorPoints = ts + camDirs + scaling * np.multiply(xs, sensorXAxes) + scaling * np.multiply(ys, sensorYAxes)
+    sensorDirs = sensorPoints - ts
+    depths = np.reshape(depth.T, (sensorHeight*sensorWidth, 1))
+    depths = np.tile(depths, (1,3))
+    pts = ts + np.multiply(sensorDirs, depths)
+    xyzCut = np.reshape(pts, (sensorHeight, sensorWidth, 3))
+    return xyzCut, pts
+
+def projectMeshCachedDebug(scene, f, R, t, sensorSize, ortho, mag, debug):
     # In OpenGL, camera points toward -z by default, hence we don't need rFix like in the MATLAB code
     sensorWidth = sensorSize[0]
     sensorHeight = sensorSize[1]
@@ -28,7 +51,7 @@ def projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, debug):
     camera_pose = np.eye(4)
     camera_pose[0:3,0:3] = R
     camera_pose[0:3,3] = t
-    scene.add(camera, pose=camera_pose)
+    cameraNode = scene.add(camera, pose=camera_pose)
 
     scene._ambient_light = np.ones((3,))
 
@@ -46,31 +69,22 @@ def projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, debug):
     # make camera point toward -z by default, as in OpenGL
     cameraDirection = -sensorCoordinateSystem[:,2] # unit vector
 
-    xyzCut = np.zeros((sensorHeight, sensorWidth, 3))
-    if debug:
-        pts = []
+    xyzCut, pts = buildXYZcut(sensorWidth, sensorHeight, t, cameraDirection, scaling,
+                                sensorXAxis, sensorYAxis, depth)
 
-    for x in range(-int(sensorWidth/2), int(sensorWidth/2)):
-        for y in range(-int(sensorHeight/2), int(sensorHeight/2)):
-            sensorPoint = t + cameraDirection + \
-                            x * scaling * sensorXAxis + \
-                            y * scaling * sensorYAxis
-            imageX = x + int(sensorWidth/2)
-            imageY = y + int(sensorHeight/2)
-            d = depth[imageY, imageX]
-            sensorPointDir = sensorPoint - t
-            intersectedPoint = t + sensorPointDir * d
-            xyzCut[imageY, imageX, :] = intersectedPoint
-            if debug:
-                pts.append(intersectedPoint)
-    
     XYZpc = -1
     if debug:
-        pts = np.array(pts)
         XYZpc = o3d.geometry.PointCloud()
         XYZpc.points = o3d.utility.Vector3dVector(pts)
+    
+    scene.remove_node(cameraNode)
 
     return meshProjection, xyzCut, depth, XYZpc
+
+def projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, debug):
+    trimeshScene = trimesh.load(meshPath)
+    scene = pyrender.Scene.from_trimesh_scene(trimeshScene)
+    return projectMeshCachedDebug(scene, f, R, t, sensorSize, ortho, mag, debug)
 
 if __name__ == '__main__':
     debug = False
