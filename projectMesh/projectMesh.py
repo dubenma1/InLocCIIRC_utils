@@ -105,7 +105,7 @@ if __name__ == '__main__':
     f = float(inputData['f'])
     R = inputData['R']
     t = inputData['t']
-    sensorSize = inputData['sensorSize']
+    sensorSize = inputData['sensorSize'].astype(np.int64) # avoid overflow, because they are uint16 by default
     ortho = inputData['ortho']
     mag = inputData['mag']
 

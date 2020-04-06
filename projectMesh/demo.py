@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from projectMesh import projectMesh
 
 meshPath = '/Volumes/GoogleDrive/Můj disk/ARTwin/InLocCIIRC_dataset/models/B-670/mesh_rotated.obj'
-f = 600
+f = 1385.6406460551023
 R = np.eye(3)
 t = np.transpose(np.array([0.0, 1.0, 0.0]))
 sensorSize = np.array([1600, 1200])
