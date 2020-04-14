@@ -5,7 +5,7 @@ inputPath = strcat(tempname, '.mat');
 outputPath = strcat(tempname, '.mat');
 save(inputPath, 'meshPath', 'f', 'R', 't', 'sensorSize', 'ortho', 'mag');
 
-% call projectPointCloud.py
+% call projectMesh.py
 if headless
     command = sprintf('PATH=/usr/local/bin:$PATH PYOPENGL_PLATFORM=osmesa python3 %s %s %s', projectMeshPyPath, inputPath, outputPath);
 else
