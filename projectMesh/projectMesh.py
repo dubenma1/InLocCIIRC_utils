@@ -83,7 +83,9 @@ def projectMeshCachedDebug(scene, f, R, t, sensorSize, ortho, mag, debug):
 
 def projectMeshDebug(meshPath, f, R, t, sensorSize, ortho, mag, debug):
     trimeshScene = trimesh.load(meshPath)
-    scene = pyrender.Scene.from_trimesh_scene(trimeshScene)
+    mesh = pyrender.Mesh.from_trimesh(trimeshScene)
+    scene = pyrender.Scene()
+    scene.add(mesh)
     return projectMeshCachedDebug(scene, f, R, t, sensorSize, ortho, mag, debug)
 
 if __name__ == '__main__':
