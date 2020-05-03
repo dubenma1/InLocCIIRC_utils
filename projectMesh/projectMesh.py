@@ -14,18 +14,35 @@ def projectMeshCached(scene, f, R, t, sensorSize, ortho, mag):
     RGBcut, XYZcut, depth, XYZpts = projectMeshCachedDebug(scene, f, R, t, sensorSize, ortho, mag, False)
     return RGBcut, XYZcut, depth
 
+def getCentered3Dindices(mode, sensorWidth, sensorHeight):
+    if mode == 'x':
+        length = sensorWidth
+    elif mode == 'y':
+        length = sensorHeight
+    else:
+        raise ValueError('Unknown mode!')
+
+    halfFloat = length/2
+    halfInt = int(halfFloat)
+    lower = -halfInt
+    upper = halfInt
+    if not np.allclose(halfFloat, halfInt):
+        upper += 1
+    ind = np.arange(lower, upper)
+    if mode == 'x':
+        ind = np.broadcast_to(ind, (sensorHeight, sensorWidth)).T
+    elif mode == 'y':
+        ind = np.broadcast_to(ind, (sensorWidth, sensorHeight))
+    ind = np.reshape(ind, (sensorHeight*sensorWidth, 1))
+    ind = np.tile(ind, (1,3))
+    return ind
+
 def buildXYZcut(sensorWidth, sensorHeight, t, cameraDirection, scaling, sensorXAxis, sensorYAxis, depth):
     # TODO: compute xs, ys only once (may not actually matter)
     ts = np.broadcast_to(t, (sensorHeight*sensorWidth, 3))
     camDirs = np.broadcast_to(cameraDirection, (sensorHeight*sensorWidth, 3))
-    xs = np.arange(-int(sensorWidth/2), int(sensorWidth/2))
-    xs = np.broadcast_to(xs, (sensorHeight, sensorWidth)).T
-    xs = np.reshape(xs, (sensorHeight*sensorWidth, 1))
-    xs = np.tile(xs, (1,3))
-    ys = np.arange(-int(sensorHeight/2), int(sensorHeight/2))
-    ys = np.broadcast_to(ys, (sensorWidth, sensorHeight))
-    ys = np.reshape(ys, (sensorHeight*sensorWidth, 1))
-    ys = np.tile(ys, (1,3))
+    xs = getCentered3Dindices('x', sensorWidth, sensorHeight)
+    ys = getCentered3Dindices('y', sensorWidth, sensorHeight)
     sensorXAxes = np.broadcast_to(sensorXAxis, (sensorHeight*sensorWidth, 3))
     sensorYAxes = np.broadcast_to(sensorYAxis, (sensorHeight*sensorWidth, 3))
     sensorPoints = ts + camDirs + scaling * np.multiply(xs, sensorXAxes) + scaling * np.multiply(ys, sensorYAxes)
