@@ -1,4 +1,4 @@
-meshPath = '/Volumes/GoogleDrive/Můj disk/ARTwin/InLocCIIRC_dataset/models/B-670/mesh_rotated.obj';
+meshPath = '/Volumes/GoogleDrive/Můj disk/ARTwin/InLocCIIRC_dataset_mirror/models/B-670/mesh_rotated.obj';
 f = 600;
 R = eye(3);
 t = [0.0; 1.0; 0.0];

@@ -115,7 +115,7 @@ if __name__ == '__main__':
     else:
         inputPath = '/private/var/folders/n0/m5ngvx3920n720yl5v9px94h0000gn/T/tp9d64aadb_8996_4290_a8fd_af152c40a41a.mat'
         outputPath = 'output.mat'
-        spacePc = o3d.io.read_point_cloud('/Volumes/GoogleDrive/Můj disk/ARTwin/InLocCIIRC_dataset/models/B-670/cloud - rotated.ply')
+        spacePc = o3d.io.read_point_cloud('/Volumes/GoogleDrive/Můj disk/ARTwin/InLocCIIRC_dataset_mirror/models/B-670/cloud - rotated.ply')
 
     inputData = sio.loadmat(inputPath, squeeze_me=True)
     meshPath = str(inputData['meshPath'])
