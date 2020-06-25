@@ -1,5 +1,6 @@
 %  Uses the network `net` to extract image representations from a list
 %  of image filenames `imageFns`.
+%  NOTE: update legacy comment:
 %  `imageFns` is a cell array containing image file names relative
 %  to the `imPath` (i.e. `[imPath, imageFns{i}]` is a valid JPEG image).
 %  The representations are saved to `outFn` (single 4-byte floats).
@@ -12,7 +13,7 @@
 %       input images are not all of same size (they are in place recognition
 %       datasets), you should set `batchSize` to 1.
 
-function cnnfeat = at_serialAllFeats_convfeat(net, imPath, imageFns, varargin)
+function cnnfeat = at_serialAllFeats_convfeat(net, image, varargin)
 
 opts= struct(...
   'useGPU', true, ...
@@ -30,9 +31,7 @@ else
   net= relja_simplenn_move(net, 'cpu');
 end
 
-thisImageFns= fullfile( imPath, imageFns );
-
-ims = single(imread(thisImageFns));
+ims = single(image);
 
 % fix non-colour images
 if size(ims,3)==1
@@ -42,8 +41,6 @@ end
 ims(:,:,1)= ims(:,:,1) - net.meta.normalization.averageImage(1,1,1);
 ims(:,:,2)= ims(:,:,2) - net.meta.normalization.averageImage(1,1,2);
 ims(:,:,3)= ims(:,:,3) - net.meta.normalization.averageImage(1,1,3);
-
-ims = at_imageresize(ims, 1600, 1200, 'pad');
 
 if opts.useGPU
   ims= gpuArray(ims);
