@@ -1,6 +1,7 @@
 function [ params ] = s10eParams(params)
 
     params.dataset.query.dirname = 'query-s10e';
+    params.dataset.query.dir = fullfile(params.dataset.dir, params.dataset.query.dirname); % NOTE: it cannot be extracted to setupParams.m, because we need it in here already
     params.dataset.query.fl = 3172; % [px]
     params.dataset.query.dslevel = 8^-1;
 

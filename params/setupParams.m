@@ -2,7 +2,7 @@ function [ params ] = setupParams(mode)
     % mode is one of {'s10e', 'holoLens1', 'holoLens2'}
     % NOTE: the number after 'holoLens' is a sequence number, not a version of HoloLens glasses!
 
-thisScriptPath = fileparts(mfilename('fullpath'));
+thisScriptPath = [fileparts(mfilename('fullpath')), '/'];
 addpath([thisScriptPath, '../environment']);
 
 params = struct();
@@ -39,7 +39,6 @@ params.dataset.models.dir = fullfile(params.dataset.dir, 'models');
 params.pointCloud.path = fullfile(params.dataset.models.dir, params.spaceName, 'cloud - rotated.ply');
 params.projectPointCloudPy.path = [thisScriptPath, '../projectPointsCloud/projectPointCloud.py'];
 params.reconstructPosePy.path = [thisScriptPath, '../reconstructPose/reconstructPose.py'];
-params.dataset.query.dir = fullfile(params.dataset.dir, params.dataset.query.dirname);
 params.projectedPointCloud.dir = fullfile(params.dataset.query.dir, 'projectedPointCloud');
 params.poses.dir = fullfile(params.dataset.query.dir, 'poses');
 params.queryDescriptions.path = fullfile(params.dataset.query.dir, 'descriptions.csv');
@@ -85,7 +84,7 @@ params.input.feature.db_matformat = '.features.dense.mat';
 params.input.feature.q_matformat = '.features.dense.mat';
 params.input.feature.db_sps_matformat = '.features.sparse.mat';
 params.input.feature.q_sps_matformat = '.features.sparse.mat';
-params.input.projectMesh_py_path = fullfile([thisScriptPath, '../projectMesh/projectMesh.py');
+params.input.projectMesh_py_path = fullfile([thisScriptPath, '../projectMesh/projectMesh.py']);
 
 %output
 params.output.dir = fullfile(params.dataset.dir, 'outputs');
@@ -114,8 +113,8 @@ params.evaluation.retrieved.poses.dir = fullfile(params.evaluation.dir, 'retriev
 params.evaluation.retrieved.queries.path = fullfile(params.evaluation.dir, 'retrievedQueries.csv');
 
 % NOTE: this snippet might be expensive
-load(params.input.dblist_matname, 'cutout_imgnames_all');
+load(params.input.dblist.path);
 params.dataset.db.cutout.size = size(imread(fullfile(params.dataset.db.cutouts.dir, cutout_imgnames_all{1})));
-params.dataset.db.cutout.size = [params.data.db.cutout.size(2), params.dataset.db.cutout.size(1)]; % width, heigh
+params.dataset.db.cutout.size = [params.dataset.db.cutout.size(2), params.dataset.db.cutout.size(1)]; % width, heigh
 
 end

@@ -2,6 +2,7 @@ function [ params ] = holoLens2Params(params)
     % TODO: some of these params are legacy. Adjustments needed.
 
     params.dataset.query.dirname = 'query-HoloLens2';
+    params.dataset.query.dir = fullfile(params.dataset.dir, params.dataset.query.dirname); % NOTE: it cannot be extracted to setupParams.m, because we need it in here already
     params.holoLens.dir = '/Volumes/GoogleDrive/Můj disk/ARTwin/personal/lucivpav/HoloLens sequences';
     params.holoLens.measurement.path = fullfile(params.holoLens.dir, 'measurement2.txt');
     params.holoLens.recording.dir = fullfile(params.holoLens.dir, 'HoloLensRecording__2020_04_23__10_15_23');
