@@ -7,9 +7,9 @@ save(inputPath, 'meshPath', 'f', 'R', 't', 'sensorSize', 'ortho', 'mag');
 
 % call projectMesh.py
 if headless
-    command = sprintf('PATH=/usr/local/bin:$PATH PYOPENGL_PLATFORM=osmesa python3 %s %s %s', projectMeshPyPath, inputPath, outputPath);
+    command = sprintf('PATH=/usr/local/bin:$PATH PYOPENGL_PLATFORM=osmesa python3 "%s" %s %s', projectMeshPyPath, inputPath, outputPath);
 else
-    command = sprintf('PATH=/usr/local/bin:$PATH python3 %s %s %s', projectMeshPyPath, inputPath, outputPath);
+    command = sprintf('PATH=/usr/local/bin:$PATH python3 "%s" %s %s', projectMeshPyPath, inputPath, outputPath);
 end
 
 disp(command)
