@@ -5,7 +5,7 @@ function [Rs,Cs,errors] = reconstructPose(u, x, K, reconstructPosePyPath)
     save(inputPath, 'u', 'x', 'K');
     
     % call reconstructPose.py
-    command = sprintf('PATH=/usr/local/bin:$PATH python3 %s %s %s', reconstructPosePyPath, inputPath, outputPath);
+    command = sprintf('PATH=/usr/local/bin:$PATH python3 "%s" %s %s', reconstructPosePyPath, inputPath, outputPath);
     disp(command);
     [status, cmdout] = system(command);
     disp(cmdout);

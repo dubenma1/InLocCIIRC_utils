@@ -8,8 +8,8 @@ function [ params ] = holoLens2Params(params)
     params.holoLens.recording.dir = fullfile(params.holoLens.dir, 'HoloLensRecording__2020_04_23__10_15_23');
     params.holoLens.query.dir = fullfile(params.holoLens.recording.dir, 'pv');
     params.holoLens.poses.path = fullfile(params.holoLens.recording.dir, 'pv_locationData.csv');
-    params.HoloLensPoses.dir = fullfile(params.query.dir, 'HoloLensPoses');
-    params.HoloLensProjectedPointCloud.dir = fullfile(params.query.dir, 'HoloLensProjectedPointCloud');
+    params.HoloLensPoses.dir = fullfile(params.dataset.query.dir, 'HoloLensPoses');
+    params.HoloLensProjectedPointCloud.dir = fullfile(params.dataset.query.dir, 'HoloLensProjectedPointCloud');
     params.HoloLensTranslationDelay = 5; % in frames, w.r.t. reference poses
     params.HoloLensOrientationDelay = 4; % in frames, w.r.t. reference poses
 
