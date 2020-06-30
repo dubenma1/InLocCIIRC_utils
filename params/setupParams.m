@@ -11,12 +11,15 @@ env = environment();
 if strcmp(env, 'laptop')
     params.dataset.dir = '/Volumes/GoogleDrive/Můj disk/ARTwin/InLocCIIRC_dataset';
     params.netvlad.dataset.dir = '/Volumes/GoogleDrive/Můj disk/ARTwin/InLocCIIRC_dataset/NetVLAD';
+    params.multiCameraPoseExe.path = '/Users/lucivpav/repos/MultiCameraPose/build/src/multi_camera_pose';
 elseif strcmp(env, 'cmp')
     params.dataset.dir = '/mnt/datagrid/personal/lucivpav/InLocCIIRC_dataset';
     params.netvlad.dataset.dir = '/mnt/datagrid/personal/lucivpav/NetVLAD';
+    params.multiCameraPoseExe.path = 'TODO';
 elseif strcmp(env, 'ciirc')
     params.dataset.dir = '/home/lucivpav/InLocCIIRC_dataset';
     params.netvlad.dataset.dir = '/home/lucivpav/NetVLAD';
+    params.multiCameraPoseExe.path = 'TODO';
 else
     error('Unrecognized environment');
 end
@@ -111,6 +114,7 @@ params.evaluation.errors.path = fullfile(params.evaluation.dir, 'errors.csv');
 params.evaluation.summary.path = fullfile(params.evaluation.dir, 'summary.txt');
 params.evaluation.retrieved.poses.dir = fullfile(params.evaluation.dir, 'retrievedPoses');
 params.evaluation.retrieved.queries.path = fullfile(params.evaluation.dir, 'retrievedQueries.csv');
+params.evaluation.sequences.dir = fullfile(params.evaluation.dir, 'sequences');
 
 % NOTE: this snippet might be expensive
 load(params.input.dblist.path);
