@@ -26,7 +26,13 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtFi
         % extrinsics
         thisCameraPoseWrtFirstCameraPose = squeeze(cameraPoseWrtFirstCameraPose(i,:,:));
         thisOrientation = thisCameraPoseWrtFirstCameraPose(1:3,1:3);
-        thisOrientation = rotm2quat(thisOrientation);
+        thisOrientation = thisOrientation'; % aka firstCameraCSBasesToCameraBases (as in rawPoseToPose) % TODO: is this necessary?
+
+        thisOrientation = rotm2quat(thisOrientation); % this is the same as below code, provided 'point' is used
+        %thisOrientation = quaternion(thisOrientation, 'rotmat', 'point'); % NOTE: assuming 'frame' is not the correct param
+        %[A,B,C,D] = parts(thisOrientation);
+        %thisOrientation = [A,B,C,D];
+
         thisPosition = thisCameraPoseWrtFirstCameraPose(1:3,4);
         fprintf(rigFile, '%f %f %f %f %f %f %f\n', thisOrientation, thisPosition);
     end
