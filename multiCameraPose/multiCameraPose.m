@@ -58,9 +58,27 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
     [status, cmdout] = system(command);
     disp(cmdout);
     
-    % load results
-    %% TODO: process outputPath
-    posesWrtModel = -1;
+    %% load results
+    fid = fopen(outputPath, 'r');
+    data_all = textscan(fid, '%s', 'Delimiter', '\n');
+    data_all = data_all{1};
+    fclose(fid);
+
+    posesWrtModel = zeros(k,4,4);
+    for i=1:k
+        stringCells = strsplit(data_all{i});
+        doubleCells = str2double(stringCells);
+        queryId = doubleCells(1);
+        assert(queryId == queryInd(i));
+        q = doubleCells(2:5); % World bases to camera bases
+        t = doubleCells(6:end)'; % translation from camera origin to World origin, wrt camera bases/CS
+        R = rotmat(quaternion(q), 'point'); % World bases to camera bases
+        c = -R' * t; % camera origin, wrt World CS
+        pose = eye(4);
+        pose(1:3,1:3) = R;
+        pose(1:3,4) = c;
+        posesWrtModel(i,:,:) = pose;
+    end
     
     %% delete temporary files
     %TODO: rmdir(dataDir, 's');
