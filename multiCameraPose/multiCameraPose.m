@@ -1,4 +1,4 @@
-function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtFirstCameraPose, ...
+function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHoloLensCS, ...
                                             correspondences2D, correspondences3D, ...
                                             inlierThreshold, numLoSteps, ...
                                             invertYZ, pointsCentered, undistortionNeeded, params)
@@ -19,21 +19,21 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtFi
     for i=1:k
         % intrinsics
         queryId = queryInd(i);
-        fprintf(rigFile, '%d PINHOLE %f %f %f %f %f %f ', queryId, imageWidth, imageHeight, ...
+        fprintf(rigFile, '%d PINHOLE %d %d %f %f %f %f ', queryId, imageWidth, imageHeight, ...
                                                             params.camera.K(1,1), params.camera.K(2,2), ...
                                                             params.camera.K(1,3), params.camera.K(2,3));
 
         % extrinsics
-        thisCameraPoseWrtFirstCameraPose = squeeze(cameraPoseWrtFirstCameraPose(i,:,:));
-        thisOrientation = thisCameraPoseWrtFirstCameraPose(1:3,1:3);
-        thisOrientation = thisOrientation'; % aka firstCameraCSBasesToCameraBases (as in rawPoseToPose) % TODO: is this necessary?
+        thisCameraPoseWrtHoloLensCS = squeeze(cameraPoseWrtHoloLensCS(queryId,:,:));
+        thisOrientation = thisCameraPoseWrtHoloLensCS(1:3,1:3);
+        thisOrientation = thisOrientation'; % aka holoLensCSBasesToCameraBases
 
         thisOrientation = rotm2quat(thisOrientation); % this is the same as below code, provided 'point' is used
         %thisOrientation = quaternion(thisOrientation, 'rotmat', 'point'); % NOTE: assuming 'frame' is not the correct param
         %[A,B,C,D] = parts(thisOrientation);
         %thisOrientation = [A,B,C,D];
 
-        thisPosition = thisCameraPoseWrtFirstCameraPose(1:3,4);
+        thisPosition = thisCameraPoseWrtHoloLensCS(1:3,4);
         fprintf(rigFile, '%f %f %f %f %f %f %f\n', thisOrientation, thisPosition);
     end
     fclose(rigFile);
@@ -60,6 +60,7 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtFi
     
     % load results
     %% TODO: process outputPath
+    posesWrtModel = -1;
     
     %% delete temporary files
     %TODO: rmdir(dataDir, 's');
