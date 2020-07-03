@@ -24,7 +24,7 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
                                                             params.camera.K(1,3), params.camera.K(2,3));
 
         % extrinsics
-        thisCameraPoseWrtHoloLensCS = squeeze(cameraPoseWrtHoloLensCS(queryId,:,:));
+        thisCameraPoseWrtHoloLensCS = squeeze(cameraPoseWrtHoloLensCS(i,:,:));
         thisOrientation = thisCameraPoseWrtHoloLensCS(1:3,1:3);
         thisOrientation = thisOrientation'; % aka holoLensCSBasesToCameraBases
 
