@@ -111,6 +111,7 @@ params.output.synth.matformat = '.synth.mat';%View synthesis results (file exten
 params.evaluation.dir = fullfile(params.dataset.dir, 'evaluation');
 params.evaluation.query_vs_synth.dir = fullfile(params.evaluation.dir, 'queryVsSynth');
 params.evaluation.errors.path = fullfile(params.evaluation.dir, 'errors.csv');
+params.evaluation.mean.errors.path = fullfile(params.evaluation.dir, 'meanErrors.csv');
 params.evaluation.summary.path = fullfile(params.evaluation.dir, 'summary.txt');
 params.evaluation.retrieved.poses.dir = fullfile(params.evaluation.dir, 'retrievedPoses');
 params.evaluation.retrieved.queries.path = fullfile(params.evaluation.dir, 'retrievedQueries.csv');

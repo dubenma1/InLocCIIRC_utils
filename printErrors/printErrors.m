@@ -6,5 +6,7 @@ function printErrors(errors)
     for i=1:nErrors
         fprintf('%d\t%0.2f\t%0.2f\n', errors(i).queryId, errors(i).translation, errors(i).orientation);
     end
-    fprintf('Mean\t%0.2f\t%0.2f\n', mean([errors.translation]),  mean([errors.orientation]))
+    meanTranslation = mean([errors(~isnan([errors.translation])).translation]);
+    meanOrientation = mean([errors(~isnan([errors.orientation])).orientation]);
+    fprintf('Mean\t%0.2f\t%0.2f\n', meanTranslation, meanOrientation);
 end
