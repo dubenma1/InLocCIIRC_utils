@@ -57,6 +57,10 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
     disp(command);
     [status, cmdout] = system(command);
     disp(cmdout);
+
+    if status ~= 0
+        error(sprintf("multiCameraPoseExe returned status: %d", status));
+    end
     
     %% load results
     fid = fopen(outputPath, 'r');
