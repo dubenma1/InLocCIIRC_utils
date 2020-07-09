@@ -120,6 +120,6 @@ params.evaluation.sequences.dir = fullfile(params.evaluation.dir, 'sequences');
 % NOTE: this snippet might be expensive
 load(params.input.dblist.path);
 params.dataset.db.cutout.size = size(imread(fullfile(params.dataset.db.cutouts.dir, cutout_imgnames_all{1})));
-params.dataset.db.cutout.size = [params.dataset.db.cutout.size(2), params.dataset.db.cutout.size(1)]; % width, heigh
+params.dataset.db.cutout.size = [params.dataset.db.cutout.size(2), params.dataset.db.cutout.size(1)]; % width, height
 
 end
