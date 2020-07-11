@@ -56,7 +56,8 @@ res = vl_simplenn(net, ims, [], [], simpleNnOpts{:});
 clear ims;
 
 
-cnnfeat = cell(1,5);
+cnnfeat = cell(1,6);
+cnnfeat{6}.x = gather(res(34).x);
 cnnfeat{5}.x = gather(res(31).x);
 cnnfeat{4}.x = gather(res(25).x);
 cnnfeat{3}.x = gather(res(18).x);
