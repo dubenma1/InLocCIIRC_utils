@@ -73,7 +73,8 @@ def projectMeshCachedDebug(scene, f, R, t, sensorSize, ortho, mag, debug):
     scene._ambient_light = np.ones((3,))
 
     r = pyrender.OffscreenRenderer(sensorWidth, sensorHeight)
-    meshProjection, depth = r.render(scene)
+    meshProjection, depth = r.render(scene) # TODO: this thing consumes ~14 GB RAM!!!
+    r.delete() # this releases that; but it should not require so much RAM in the first place
 
     # XYZ cut
     scaling = 1.0/f
