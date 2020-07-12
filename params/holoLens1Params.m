@@ -21,6 +21,7 @@ function [ params ] = holoLens1Params(params)
     params.HoloLensProjectedPointCloud.dir = fullfile(params.dataset.query.dir, 'HoloLensProjectedPointCloud');
     params.HoloLensTranslationDelay = 6; % in frames, w.r.t. reference poses
     params.HoloLensOrientationDelay = 4; % in frames, w.r.t. reference poses
+    params.sequence.length = 5; % data is sequential and we want to use HoloLens pose estimates to improve localization
 
     % NOTE: some reference poses are wrong due to Vicon error, blacklist them
     params.blacklistedQueryInd = [103:109, 162, 179:188, 191:193, 286:288];
