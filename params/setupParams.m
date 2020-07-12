@@ -65,7 +65,7 @@ params.dataset.db.space_names = {'B-670', 'B-315'};
 params.dataset.db.scan.dir = 'scans';
 params.dataset.db.scan.matformat = '.ptx.mat';
 %%cutouts
-params.dataset.db.cutout.dirname = 'cutouts';
+params.dataset.db.cutout.dirname = 'cutouts'; % TODO: rename to ...cutouts...?
 params.dataset.db.cutouts.dir = fullfile(params.dataset.dir, params.dataset.db.cutout.dirname);
 params.dataset.db.cutout.imgformat = '.jpg';
 params.dataset.db.cutout.matformat = '.mat';
