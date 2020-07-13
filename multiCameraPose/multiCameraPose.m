@@ -1,5 +1,5 @@
 function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHoloLensCS, ...
-                                            correspondences2D, correspondences3D, ...
+                                            allCorrespondences2D, allCorrespondences3D, ...
                                             inlierThreshold, numLoSteps, ...
                                             invertYZ, pointsCentered, undistortionNeeded, params)
     dataDir = workingDir;
@@ -43,9 +43,12 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
         queryId = queryInd(i);
         matchesPath = fullfile(matchesDir, sprintf('%d%s', queryId, '.individual_datasets.matches.txt'));
         matchesFile = fopen(matchesPath, 'w');
-        nMatchesPerQuery = size(correspondences3D,3);
-        for j=1:nMatchesPerQuery
-            fprintf(matchesFile, '%f %f %f %f %f\n', correspondences2D(:,j), correspondences3D(i,:,j));
+        correspondences2D = allCorrespondences2D{i};
+        correspondences3D = allCorrespondences3D{i};
+        nMatches = size(correspondences2D,2);
+        assert(size(correspondences3D,2) == nMatches);
+        for j=1:nMatches
+            fprintf(matchesFile, '%f %f %f %f %f\n', correspondences2D(:,j), correspondences3D(:,j));
         end
         fclose(matchesFile);
     end

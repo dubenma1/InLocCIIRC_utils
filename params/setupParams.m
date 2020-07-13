@@ -115,7 +115,6 @@ params.evaluation.mean.errors.path = fullfile(params.evaluation.dir, 'meanErrors
 params.evaluation.summary.path = fullfile(params.evaluation.dir, 'summary.txt');
 params.evaluation.retrieved.poses.dir = fullfile(params.evaluation.dir, 'retrievedPoses');
 params.evaluation.retrieved.queries.path = fullfile(params.evaluation.dir, 'retrievedQueries.csv');
-params.evaluation.sequences.dir = fullfile(params.evaluation.dir, 'sequences');
 
 % NOTE: this snippet might be expensive
 load(params.input.dblist.path);
