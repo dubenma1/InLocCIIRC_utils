@@ -71,7 +71,7 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
     data_all = data_all{1};
     fclose(fid);
 
-    posesWrtModel = zeros(k,4,4);
+    posesWrtModel = cell(1,k);
     for i=1:k
         stringCells = strsplit(data_all{i});
         doubleCells = str2double(stringCells);
@@ -84,7 +84,7 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
         pose = eye(4);
         pose(1:3,1:3) = R;
         pose(1:3,4) = c;
-        posesWrtModel(i,:,:) = pose;
+        posesWrtModel{i} = pose;
     end
     
     %% delete temporary files
