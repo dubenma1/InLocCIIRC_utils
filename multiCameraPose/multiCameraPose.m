@@ -1,7 +1,8 @@
 function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHoloLensCS, ...
                                             allCorrespondences2D, allCorrespondences3D, ...
                                             inlierThreshold, numLoSteps, ...
-                                            invertYZ, pointsCentered, undistortionNeeded, params)
+                                            invertYZ, pointsCentered, undistortionNeeded, ...
+                                            imageWidth, imageHeight, K, params)
     dataDir = workingDir;
     mkdirIfNonExistent(dataDir);
     matchesDir = fullfile(dataDir, 'matches');
@@ -10,18 +11,14 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
     outputPath = fullfile(dataDir, 'multiCameraPoseOutput.txt');
 
     %% save cameras intrinsics and extrinsics, in the MultiCameraPose format
-    sensorSize = params.camera.sensor.size; % height, width
-    imageWidth = sensorSize(2);
-    imageHeight = sensorSize(1);
-
     rigFile = fopen(rigPath, 'w');
     k = size(queryInd,1); % the length of the sequence
     for i=1:k
         % intrinsics
         queryId = queryInd(i);
         fprintf(rigFile, '%d PINHOLE %d %d %f %f %f %f ', queryId, imageWidth, imageHeight, ...
-                                                            params.camera.K(1,1), params.camera.K(2,2), ...
-                                                            params.camera.K(1,3), params.camera.K(2,3));
+                                                            K(1,1), K(2,2), ...
+                                                            K(1,3), K(2,3));
 
         % extrinsics
         thisCameraPoseWrtHoloLensCS = squeeze(cameraPoseWrtHoloLensCS(i,:,:));

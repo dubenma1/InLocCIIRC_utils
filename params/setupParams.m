@@ -4,6 +4,7 @@ function [ params ] = setupParams(mode)
 
 thisScriptPath = [fileparts(mfilename('fullpath')), '/'];
 addpath([thisScriptPath, '../environment']);
+addpath([thisScriptPath, '../buildK']);
 
 params = struct();
 env = environment();
@@ -54,11 +55,7 @@ params.closest.cutout.dir = fullfile(params.dataset.query.dir, 'closestCutout');
 params.vicon.origin.wrt.model = [-0.13; 0.04; 2.80];
 params.vicon.rotation.wrt.model = deg2rad([90.0 180.0 0.0]);
 
-params.camera.K = eye(3);
-params.camera.K(1,1) = params.camera.fl;
-params.camera.K(2,2) = params.camera.fl;
-params.camera.K(1,3) = params.camera.sensor.size(2)/2;
-params.camera.K(2,3) = params.camera.sensor.size(1)/2;
+params.camera.K = buildK(params.camera.fl, params.camera.sensor.size(2), params.camera.sensor.size(1));
 
 %database
 params.dataset.db.space_names = {'B-670', 'B-315'};
@@ -121,5 +118,7 @@ params.evaluation.retrieved.queries.path = fullfile(params.evaluation.dir, 'retr
 load(params.input.dblist.path);
 params.dataset.db.cutout.size = size(imread(fullfile(params.dataset.db.cutouts.dir, cutout_imgnames_all{1})));
 params.dataset.db.cutout.size = [params.dataset.db.cutout.size(2), params.dataset.db.cutout.size(1)]; % width, height
+params.dataset.db.cutout.fl = 600.0000; % TODO: this must match the params in buildCutouts (see _dataset repo)!
+params.dataset.db.cutout.K = buildK(params.dataset.db.cutout.fl, params.dataset.db.cutout.size(1), params.dataset.db.cutout.size(2));
 
 end
