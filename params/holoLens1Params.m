@@ -2,7 +2,6 @@ function [ params ] = holoLens1Params(params)
 
     params.dataset.query.dirname = 'query-HoloLens1';
     params.dataset.query.dir = fullfile(params.dataset.dir, params.dataset.query.dirname); % NOTE: it cannot be extracted to setupParams.m, because we need it in here already
-    params.dataset.query.fl = 1038; % [px]
     params.dataset.query.dslevel = 8^-1;
 
     env = environment();
@@ -54,7 +53,7 @@ function [ params ] = holoLens1Params(params)
     params.camera.originConstant = 0.023;
     params.camera.origin.wrt.marker = params.camera.originConstant * params.camera.origin.relative.wrt.marker;
     params.camera.sensor.size = [756, 1344]; % height, width
-    params.camera.fl = 1038; % in pixels
+    params.camera.fl = 1038; % in pixels; this is not worse than the previous fl
     %params.HoloLensViconSyncConstant = 10.7 * 1000; % [ms]
     params.HoloLensViconSyncConstant = 10.7 * 1000; % [ms]; from buildRawPoses
     
