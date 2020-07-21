@@ -7,7 +7,7 @@ function posesFromHoloLens = getPosesFromHoloLens(orientationDelay, translationD
 
     nAllQueries = size(rawHoloLensPosesTable,1);
     cameraPosesWrtHoloLensCS = zeros(nAllQueries,4,4); % the indices are for queryIds and they start from 1 (not disorganized like ImgList)
-    for i=queryId:nAllQueries % assuming all queries dataset starts with query ID 1 and increases by 1
+    for queryId=1:nAllQueries % assuming all queries dataset starts with query ID 1 and increases by 1
         t = [rawHoloLensPosesTable{queryId, 'Position_X'}; ...
                     rawHoloLensPosesTable{queryId, 'Position_Y'}; ...
                     rawHoloLensPosesTable{queryId, 'Position_Z'}];
