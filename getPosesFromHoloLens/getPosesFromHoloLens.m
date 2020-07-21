@@ -1,19 +1,20 @@
-function posesFromHoloLens = getPosesFromHoloLens(orientationDelay, translationDelay, params)
+function posesFromHoloLens = getPosesFromHoloLens(orientationDelay, translationDelay, queryInd, params)
+    % queryInd is an array of query IDs, as present in ImgList (both primary and secondary queries)
     prevWarningState = warning();
     warning('OFF', 'MATLAB:table:ModifiedAndSavedVarnames');
     rawHoloLensPosesTable = readtable(params.holoLens.poses.path);
     warning(prevWarningState);
 
-    nQueries = size(rawHoloLensPosesTable,1);
-    cameraPosesWrtHoloLensCS = zeros(nQueries,4,4); % the indices are for queryIds and they start from 1 (not disorganized like ImgList)
-    for i=1:nQueries
-        t = [rawHoloLensPosesTable{i, 'Position_X'}; ...
-                    rawHoloLensPosesTable{i, 'Position_Y'}; ...
-                    rawHoloLensPosesTable{i, 'Position_Z'}];
-        orientation = [rawHoloLensPosesTable{i, 'Orientation_W'}, ...
-                        rawHoloLensPosesTable{i, 'Orientation_X'}, ...
-                        rawHoloLensPosesTable{i, 'Orientation_Y'}, ...
-                        rawHoloLensPosesTable{i, 'Orientation_Z'}];
+    nAllQueries = size(rawHoloLensPosesTable,1);
+    cameraPosesWrtHoloLensCS = zeros(nAllQueries,4,4); % the indices are for queryIds and they start from 1 (not disorganized like ImgList)
+    for i=queryId:nAllQueries % assuming all queries dataset starts with query ID 1 and increases by 1
+        t = [rawHoloLensPosesTable{queryId, 'Position_X'}; ...
+                    rawHoloLensPosesTable{queryId, 'Position_Y'}; ...
+                    rawHoloLensPosesTable{queryId, 'Position_Z'}];
+        orientation = [rawHoloLensPosesTable{queryId, 'Orientation_W'}, ...
+                        rawHoloLensPosesTable{queryId, 'Orientation_X'}, ...
+                        rawHoloLensPosesTable{queryId, 'Orientation_Y'}, ...
+                        rawHoloLensPosesTable{queryId, 'Orientation_Z'}];
         R = rotmat(quaternion(orientation), 'frame'); % what are the columns of R? 
             % Bases of WHAT wrt WHAT? (one of them is initial unknown HL CS, the other is HL camera CS)
             % -> it is most likely a rotation matrix from initial unknown HL CS to HL camera CS. i.e. the columns
@@ -35,15 +36,17 @@ function posesFromHoloLens = getPosesFromHoloLens(orientationDelay, translationD
         pose = eye(4);
         pose(1:3,1:3) = cameraOrientationWrtHoloLensCS;
         pose(1:3,4) = cameraPositionWrtHoloLensCS;
-        cameraPosesWrtHoloLensCS(i,:,:) = pose;
+        cameraPosesWrtHoloLensCS(queryId,:,:) = pose;
     end
 
     % recalculate HoloLens poses based on a (possible) delay
+    nQueries = length(queryInd);
     cameraPosesWrtHoloLensCS2 = zeros(nQueries,4,4);
     for i=1:nQueries
-        orientationDataIdx = i+orientationDelay;
-        translationDataIdx = i+translationDelay;
-        if (orientationDataIdx > nQueries || translationDataIdx > nQueries)
+        queryId = queryInd(i);
+        orientationDataIdx = queryId+orientationDelay;
+        translationDataIdx = queryId+translationDelay;
+        if (orientationDataIdx > nAllQueries || translationDataIdx > nAllQueries)
             pose = nan(4,4);
         else
             pose = eye(4);
