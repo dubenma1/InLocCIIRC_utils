@@ -10,14 +10,14 @@ function [P,T,R,spaceName,descriptions] = loadPoseFromInLocCIIRC_demo(queryId, I
     tf = arrayfun(fun, 1:numel(ImgList));
     ImgListRecord = ImgList(tf);
 
-    cutoutPath = ImgListRecord.topNname{1};
+    cutoutPath = ImgListRecord.topNname{end,1};
     cutoutPath = strsplit(cutoutPath, '/');
     spaceName = cutoutPath{1};
     sweepId = cutoutPath{2};
     transPath = fullfile(params.dataset.db.trans.dir, spaceName, 'transformations', sprintf('trans_%s.txt', sweepId));
     P1 = load_CIIRC_transformation(transPath);
     R1 = P1(1:3,1:3);
-    P2 = ImgListRecord.P{1};
+    P2 = ImgListRecord.Ps{end,1}{1};
     if any(isnan(P2(:)))
         P = nan(4,4);
         T = nan(3,1);
