@@ -1,6 +1,10 @@
-function [ params ] = setupParams(mode)
+function [ params ] = setupParams(mode, requireExperimentName)
     % mode is one of {'s10e', 'holoLens1', 'holoLens2'}
     % NOTE: the number after 'holoLens' is a sequence number, not a version of HoloLens glasses!
+arguments
+    mode char
+    requireExperimentName logical = false
+end
 
 thisScriptPath = [fileparts(mfilename('fullpath')), '/'];
 addpath([thisScriptPath, '../environment']);
@@ -35,6 +39,19 @@ elseif strcmp(mode, 'holoLens2')
     params = holoLens2Params(params);
 else
     error('Unrecognized mode');
+end
+
+experimentName = getenv("INLOC_EXPERIMENT_NAME");
+if requireExperimentName && isempty(experimentName)
+    error('Please specify environment variable INLOC_EXPERIMENT_NAME.');
+end
+
+if isempty(experimentName)
+    experimentSuffix = '';
+    warning('InLocCIIRC is running without an experiment name.');
+else
+    experimentSuffix = sprintf('-%s', experimentName);
+    fprintf('InLocCIIRC is running experiment "%s".\n', experimentName);
 end
 
 params.mode = mode;
@@ -74,7 +91,7 @@ params.dataset.db.trans.dir = fullfile(params.dataset.dir, 'alignments');
 params.dataset.query.imgformat = '.jpg';
 
 %input
-params.input.dir = fullfile(params.dataset.dir, 'inputs');
+params.input.dir = fullfile(params.dataset.dir, sprintf('inputs%s', experimentSuffix));
 
 params.input.dblist.path = fullfile(params.input.dir, 'cutout_imgnames_all.mat');%string cell containing cutout image names
 params.input.qlist.path = fullfile(params.input.dir, 'query_imgnames_all.mat');%string cell containing query image names
@@ -88,7 +105,7 @@ params.input.feature.q_sps_matformat = '.features.sparse.mat';
 params.input.projectMesh_py_path = fullfile([thisScriptPath, '../projectMesh/projectMesh.py']);
 
 %output
-params.output.dir = fullfile(params.dataset.dir, 'outputs');
+params.output.dir = fullfile(params.dataset.dir, sprintf('outputs%s', experimentSuffix));
 params.output.gv_dense.dir = fullfile(params.output.dir, 'gv_dense');%dense matching results (directory)
 params.output.gv_dense.matformat = '.gv_dense.mat';%dense matching results (file extention)
 params.output.gv_sparse.dir = fullfile(params.output.dir, 'gv_sparse');%sparse matching results (directory)
@@ -106,7 +123,7 @@ params.output.synth.dir = fullfile(params.output.dir, 'synthesized');%View synth
 params.output.synth.matformat = '.synth.mat';%View synthesis results (file extention)
 
 % evaluation
-params.evaluation.dir = fullfile(params.dataset.dir, 'evaluation');
+params.evaluation.dir = fullfile(params.dataset.dir, sprintf('evaluation%s', experimentSuffix));
 params.evaluation.query_vs_synth.dir = fullfile(params.evaluation.dir, 'queryVsSynth');
 params.evaluation.errors.path = fullfile(params.evaluation.dir, 'errors.csv');
 params.evaluation.mean.errors.path = fullfile(params.evaluation.dir, 'meanErrors.csv');
@@ -115,10 +132,14 @@ params.evaluation.retrieved.poses.dir = fullfile(params.evaluation.dir, 'retriev
 params.evaluation.retrieved.queries.path = fullfile(params.evaluation.dir, 'retrievedQueries.csv');
 
 % NOTE: this snippet might be expensive
-load(params.input.dblist.path);
-params.dataset.db.cutout.size = size(imread(fullfile(params.dataset.db.cutouts.dir, cutout_imgnames_all{1})));
-params.dataset.db.cutout.size = [params.dataset.db.cutout.size(2), params.dataset.db.cutout.size(1)]; % width, height
-params.dataset.db.cutout.fl = 600.0000; % TODO: this must match the params in buildCutouts (see _dataset repo)!
-params.dataset.db.cutout.K = buildK(params.dataset.db.cutout.fl, params.dataset.db.cutout.size(1), params.dataset.db.cutout.size(2));
+if ~exist(params.input.dblist.path, 'file')
+    warning('params.input.dblist.path "%s" does not exists. Some params.dataset.db.cutout params will not be set.', params.input.dir);
+else
+    load(params.input.dblist.path);
+    params.dataset.db.cutout.size = size(imread(fullfile(params.dataset.db.cutouts.dir, cutout_imgnames_all{1})));
+    params.dataset.db.cutout.size = [params.dataset.db.cutout.size(2), params.dataset.db.cutout.size(1)]; % width, height
+    params.dataset.db.cutout.fl = 600.0000; % TODO: this must match the params in buildCutouts (see _dataset repo)!
+    params.dataset.db.cutout.K = buildK(params.dataset.db.cutout.fl, params.dataset.db.cutout.size(1), params.dataset.db.cutout.size(2));
+end
 
 end
