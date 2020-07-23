@@ -20,7 +20,7 @@ if strcmp(env, 'laptop')
 elseif strcmp(env, 'cmp')
     params.dataset.dir = '/mnt/datagrid/personal/lucivpav/InLocCIIRC_dataset';
     params.netvlad.dataset.dir = '/mnt/datagrid/personal/lucivpav/NetVLAD';
-    params.multiCameraPoseExe.path = 'TODO';
+    params.multiCameraPoseExe.path = '/mnt/datagrid/personal/lucivpav/MultiCameraPose/build/src/multi_camera_pose';
 elseif strcmp(env, 'ciirc')
     params.dataset.dir = '/home/lucivpav/InLocCIIRC_dataset';
     params.netvlad.dataset.dir = '/home/lucivpav/NetVLAD';
