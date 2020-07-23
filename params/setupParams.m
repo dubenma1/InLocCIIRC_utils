@@ -125,6 +125,7 @@ params.output.synth.matformat = '.synth.mat';%View synthesis results (file exten
 % evaluation
 params.evaluation.dir = fullfile(params.dataset.dir, sprintf('evaluation%s', experimentSuffix));
 params.evaluation.query_vs_synth.dir = fullfile(params.evaluation.dir, 'queryVsSynth');
+params.evaluation.query_segments_vs_synth_segments.dir = fullfile(params.evaluation.dir, 'querySegmentsVsSynthSegments');
 params.evaluation.errors.path = fullfile(params.evaluation.dir, 'errors.csv');
 params.evaluation.mean.errors.path = fullfile(params.evaluation.dir, 'meanErrors.csv');
 params.evaluation.summary.path = fullfile(params.evaluation.dir, 'summary.txt');
