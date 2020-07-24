@@ -31,7 +31,7 @@ function posesFromHoloLens = getPosesFromHoloLens(orientationDelay, translationD
         assert(all(Rd(:) < eps));
 
         cameraPositionWrtHoloLensCS = t';
-        cameraOrientationWrtHoloLensCS = R2;
+        cameraOrientationWrtHoloLensCS = R2; % camera points to z, x going right, y going down; (because of the rFix)
 
         pose = eye(4);
         pose(1:3,1:3) = cameraOrientationWrtHoloLensCS;
