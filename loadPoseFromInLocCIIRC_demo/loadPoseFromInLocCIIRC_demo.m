@@ -5,11 +5,7 @@ function [P,T,R,spaceName,descriptions] = loadPoseFromInLocCIIRC_demo(queryId, I
     % R: modelBasesToEpsilonBases
     % it can handle the case when the returned relative pose is NaN, because InLocCIIRC got lost
     queryName = sprintf('%d.jpg', queryId);
-
-    fun = @(x) strcmp(ImgList(x).queryname,queryName);
-    tf = arrayfun(fun, 1:numel(ImgList));
-    ImgListRecord = ImgList(tf);
-
+    ImgListRecord = ImgList(find(strcmp({ImgList.queryname}, queryName)));
     cutoutPath = ImgListRecord.topNname{end,1};
     cutoutPath = strsplit(cutoutPath, '/');
     spaceName = cutoutPath{1};

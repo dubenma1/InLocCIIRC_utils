@@ -143,4 +143,7 @@ else
     params.dataset.db.cutout.K = buildK(params.dataset.db.cutout.fl, params.dataset.db.cutout.size(1), params.dataset.db.cutout.size(2));
 end
 
+%% topN constants; TODO: set it up for ht_retrieval, dense_PE and rename the script names
+params.PV.topN = 10;
+
 end
