@@ -80,7 +80,7 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
         c = -R' * t; % camera origin, wrt World CS
         pose = zeros(3,4);
         pose(1:3,1:3) = R;
-        pose(1:3,4) = c;
+        pose(1:3,4) = -R*c;
         posesWrtModel{i} = pose;
     end
     
