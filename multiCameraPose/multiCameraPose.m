@@ -3,6 +3,7 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
                                             inlierThreshold, numLoSteps, ...
                                             invertYZ, pointsCentered, undistortionNeeded, ...
                                             imageWidth, imageHeight, K, params)
+    % NOTE: it is the caller's responsibility to optionally remove the workingDir after using this method
     dataDir = workingDir;
     mkdirIfNonExistent(dataDir);
     matchesDir = fullfile(dataDir, 'matches');
@@ -83,8 +84,4 @@ function [posesWrtModel] = multiCameraPose(workingDir, queryInd, cameraPoseWrtHo
         pose(1:3,4) = -R*c;
         posesWrtModel{i} = pose;
     end
-    
-    %% delete temporary files
-    %TODO: rmdir(dataDir, 's');
-    
  end
