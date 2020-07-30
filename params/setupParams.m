@@ -85,8 +85,6 @@ params.dataset.db.cutouts.dir = fullfile(params.dataset.dir, params.dataset.db.c
 params.dataset.db.cutout.imgformat = '.jpg';
 params.dataset.db.cutout.matformat = '.mat';
 
-%%alignments
-params.dataset.db.trans.dir = fullfile(params.dataset.dir, 'alignments');
 %query
 params.dataset.query.imgformat = '.jpg';
 

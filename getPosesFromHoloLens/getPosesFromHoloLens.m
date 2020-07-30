@@ -34,7 +34,7 @@ function posesFromHoloLens = getPosesFromHoloLens(orientationDelay, translationD
         cameraOrientationWrtHoloLensCS = R2; % camera points to z, x going right, y going down; (because of the rFix)
 
         pose = eye(4);
-        pose(1:3,1:3) = cameraOrientationWrtHoloLensCS;
+        pose(1:3,1:3) = cameraOrientationWrtHoloLensCS; % camera bases to initial unknown HL bases
         pose(1:3,4) = cameraPositionWrtHoloLensCS;
         cameraPosesWrtHoloLensCS(queryId,:,:) = pose;
     end
