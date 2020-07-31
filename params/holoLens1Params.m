@@ -20,8 +20,8 @@ function [ params ] = holoLens1Params(params)
     params.HoloLensProjectedPointCloud.dir = fullfile(params.dataset.query.dir, 'HoloLensProjectedPointCloud');
     params.HoloLensTranslationDelay = 6; % in frames, w.r.t. reference poses
     params.HoloLensOrientationDelay = 4; % in frames, w.r.t. reference poses
-    params.sequence.length = 2; % data is sequential and we want to use HoloLens pose estimates to improve localization
-    params.sequence.processing.mode = 'sequentialPV' % either 'MultiCameraPose' or 'sequentialPV'
+    params.sequence.length = 1; % data is sequential and we want to use HoloLens pose estimates to improve localization
+    params.sequence.processing.mode = 'MultiCameraPose' % either 'MultiCameraPose' or 'sequentialPV'
         % sequentialPV means that the queries will be processed by P3P, but in the PV part, HoloLens projections of the k-1 previous
         % queries will be used alongside with the pose from P3P
 

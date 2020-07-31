@@ -1,4 +1,10 @@
-function [P,T,R,spaceName,descriptions] = loadPoseFromInLocCIIRC_demo(queryId, ImgList, params)
+function [P,T,R,spaceName,descriptions] = loadPoseFromInLocCIIRC_demo(queryId, ImgList, params, useLegacyAlignments)
+arguments
+    queryId double % actually an integer
+    ImgList struct
+    params struct
+    useLegacyAlignments logical = false
+end
     % queryId: e.g. 134
     % P: it is NOT a projection matrix, but a format used by InLocCIIRC to store poses
     % T: wrt model
@@ -10,12 +16,19 @@ function [P,T,R,spaceName,descriptions] = loadPoseFromInLocCIIRC_demo(queryId, I
     cutoutPath = strsplit(cutoutPath, '/');
     spaceName = cutoutPath{1};
     sweepId = cutoutPath{2};
-    P = ImgListRecord.Ps{1}{end};
-    if any(isnan(P(:)))
+    transPath = fullfile(params.dataset.db.trans.dir, spaceName, 'transformations', sprintf('trans_%s.txt', sweepId));
+    if useLegacyAlignments
+        P1 = load_CIIRC_transformation(transPath);
+    else
+        P1 = eye(4);
+    end
+    P2 = ImgListRecord.Ps{1}{end};
+    if any(isnan(P2(:)))
         P = nan(4,4);
         T = nan(3,1);
         R = nan(3,3);
     else
+        P = P2*P1;
         P = [P; 0 0 0 1];
         T = -inv(P(1:3,1:3))*P(1:3,4);
         R = P(1:3,1:3);
